@@ -3,17 +3,25 @@ import java.util.List;
 
 public class AssessmentImpl implements Assessment {
 
+    // attributes
+    private int assessmentID;
+    private String information = null;
+    private Date closingDate = null;
+    private Question question = null;
+    private int selectedAnswer = 0;
+    private int associatedID = 0;
+
     // Constructor
     public AssessmentImpl() {
         super();
+        assessmentID = 1;
+        information = "Test - What is the capital of Ireland?";
     }
 
     // Return information about the assessment
     @Override
     public String getInformation() {
-        String info = "This is a test assessment";
-        info += "\nThis assessment is for testing purposes only";
-        return info;
+        return information;
     }
 
     // Return the final date / time for submission of completed assessment
