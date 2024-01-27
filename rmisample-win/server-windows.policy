@@ -1,0 +1,4 @@
+grant codeBase "file:/c:/users/lchui/rmisample-win/" {
+    permission java.security.AllPermission;
+};
+
