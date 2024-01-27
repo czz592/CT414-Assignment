@@ -1,0 +1,5 @@
+// grant codeBase "file:C:/Users/lchui/ct414-assignment/" {
+grant codeBase "file:C:/Users/lchui/ct414-assignment" {
+    permission java.security.AllPermission;
+};
+
