@@ -1,21 +1,30 @@
 public class QuestionImpl implements Question {
 
+    // attributes
+    private int questionNumber;
+    private String questionDetail = null;
+    private String[] answerOptions = null;
+
+    // Constructor
+    public QuestionImpl() {
+        questionNumber = 1;
+        questionDetail = "What is the capital of Ireland?";
+        answerOptions = new String[] { "Dublin", "Cork", "Galway", "Belfast" };
+    }
+
     @Override
     public int getQuestionNumber() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getQuestionNumber'");
+        return questionNumber;
     }
 
     @Override
     public String getQuestionDetail() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getQuestionDetail'");
+        return questionDetail;
     }
 
     @Override
     public String[] getAnswerOptions() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAnswerOptions'");
+        return answerOptions;
     }
 
 }
