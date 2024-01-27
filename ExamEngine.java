@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class ExamEngine implements ExamServer {
 
+
     public ExamEngine() {
         super();
     }
@@ -17,8 +18,8 @@ public class ExamEngine implements ExamServer {
     // Return an access token that allows access to the server for some time period
     public int login(int studentid, String password)
             throws UnauthorizedAccess, RemoteException {
-        // hardcode studentid and password for testing
-        // and store studentid and matching password in a map
+        // hardcoded studentid and password for testing
+        // store studentid and matching password in map
         Map<Integer, String> map = new HashMap<>();
         map.put(123, "password");
         map.put(456, "password");
@@ -28,7 +29,7 @@ public class ExamEngine implements ExamServer {
         // else return UnauthorizedAccess
         int token;
         if (map.containsKey(studentid) && map.containsValue(password)) {
-            token = 1;
+            token = 1; // 1 for testing purposes
         } else {
             throw new UnauthorizedAccess("Invalid studentid or password");
         }
@@ -48,7 +49,7 @@ public class ExamEngine implements ExamServer {
         // to a list
         List<String> assessmentSummary = new ArrayList<String>();
         for (AssessmentImpl assessment : assessments) {
-            assessmentSummary.add("Summary of available assessments:");
+            assessmentSummary.add("Summary of available assessments:\n");
             assessmentSummary.add(assessment.getInformation());
         }
 
