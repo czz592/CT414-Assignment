@@ -21,7 +21,7 @@ public class ClientCLI {
             System.out.println("Enter password: ");
             String password = args[1];
             int token = engine.login(id, password);
-            
+
             // token is passed to other methods when invoked
             // print token for testing
             System.out.println("Token: " + token);
@@ -46,25 +46,23 @@ public class ClientCLI {
             // prompt for assessment answers
             // and pass to submitAssessment method
             // TODO: Implement
-            questions = assessment.getQuestions();
+            List<Question> questions = assessment.getQuestions();
             for (Question q : questions) {
                 System.out.println(q.getQuestionNumber());
                 System.out.println(q.getQuestionDetail());
                 System.out.println(q.getAnswerOptions());
                 System.out.println("Enter answer number: ");
                 int answer = Integer.parseInt(args[3]);
-                assessment.selectAnswer(q, answer);
+                assessment.selectAnswer(q.getQuestionNumber(), answer);
                 System.out.println("\n----------------------\n");
             }
-            
+
             // call submitAssessment method
             // download .txt file of completed assessment?
             // TODO: Implement and check if file needs to be "downloaded"
             engine.submitAssessment(token, id, assessment);
             System.out.println("\n----------------------\n");
             // send assessment.txt file of the completed assessment to the server
-            
-
 
         } catch (Exception e) {
             System.out.println("Error in main - " + e.toString());
