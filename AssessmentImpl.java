@@ -74,14 +74,16 @@ public class AssessmentImpl implements Assessment {
 
     // Return selected answer or zero if none selected yet
     @Override
-    public int getSelectedAnswer() {
+    public int getSelectedAnswer(int questionNumber) throws InvalidQuestionNumber {
         // if nothing is selected return 0
         if (selectedAnswers.isEmpty()) {
             return 0;
+        } else if (questionNumber < 0 || questionNumber > questions.size()) {
+            throw new InvalidQuestionNumber();
+        } else {
+            // else return selected answer of question
+            return selectedAnswers.get(questionNumber);
         }
-        // else return selected answer of question
-        // assuming only one question for testing
-        return selectedAnswers.get(0);
     }
 
     // Return studentid associated with this assessment object
