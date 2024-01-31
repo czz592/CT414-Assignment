@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,9 @@ public class AssessmentImpl implements Assessment {
         super();
         this.courseCode = courseCode;
         assessmentID = 1;
+        questions = new ArrayList<Question>();
         questions.add(new QuestionImpl());
+        selectedAnswers = new ArrayList<Integer>();
         closingDate = new Date();
         this.associatedID = associatedID;
     }
@@ -62,14 +65,16 @@ public class AssessmentImpl implements Assessment {
             throw new InvalidQuestionNumber();
         }
         // get Question
-        Question question = questions.get(questionNumber);
+        Question question = questions.get(questionNumber - 1);
         // check optionNumber is valid
         // if not valid throw InvalidOptionNumber
         if (optionNumber < 0 || optionNumber > question.getAnswerOptions().length) {
             throw new InvalidOptionNumber();
         }
-        // set selectedAnswer
-        selectedAnswers.set(questionNumber, optionNumber);
+        // index into selectedAnswers
+        // using questionNumber
+        // and set value to optionNumber
+        selectedAnswers.add(questionNumber - 1, optionNumber - 1);
     }
 
     // Return selected answer or zero if none selected yet

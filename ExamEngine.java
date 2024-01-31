@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.QueryEval;
+
+import java.io.FileWriter;
+
 public class ExamEngine implements ExamServer {
 
     private List<Assessment> assessments;
@@ -16,6 +20,9 @@ public class ExamEngine implements ExamServer {
     public ExamEngine() {
         super();
         assessments = new ArrayList<Assessment>();
+        // create hardcoded assessment for testing
+        AssessmentImpl as1 = new AssessmentImpl("test", 123);
+        assessments.add(as1);
         // hardcoded studentid and password for testing
         // store studentid and matching password in map
         map.put(123, "password");
@@ -79,10 +86,6 @@ public class ExamEngine implements ExamServer {
          * with the studentid set by the server
          */
 
-        // create hardcoded assessment for testing
-        AssessmentImpl as1 = new AssessmentImpl("test", studentid);
-        assessments.add(as1);
-
         // test if any assessment with courseCode exists in assessments
         // if not throw NoMatchingAssessment (moot because as1 is created with test)
         // else return assessment
@@ -106,9 +109,27 @@ public class ExamEngine implements ExamServer {
         // iterate through assessments to find assessment with matching studentid
         // if no matching id throw NoMatchingAssessment
         // else set assessment to completed
+        int i = 0;
         for (Assessment assessment : assessments) {
             if (assessment.getAssociatedID() == completed.getAssociatedID()) {
                 assessment = completed;
+                // write assessment to .txt file
+                // write to file using assessment.getInformation()
+                System.out.println("ExamEngine - Writing assessment to file...");
+                try {
+                    FileWriter fw = new FileWriter("assessment_" + i + ".txt");
+                    fw.write(assessment.getInformation());
+                    for (Question q : assessment.getQuestions()) {
+                        fw.append(q.getQuestionDetail());
+                        for (String s : q.getAnswerOptions()) {
+                            fw.append(s);
+                        }
+                    }
+                    fw.close();
+                } catch (Exception e) {
+                    System.out.println("Error writing to file - " + e.toString());
+                }
+                i++;
             } else {
                 throw new NoMatchingAssessment("No matching assessment found in list of assessments.\n");
             }
