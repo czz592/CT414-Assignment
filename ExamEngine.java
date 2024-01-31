@@ -117,13 +117,21 @@ public class ExamEngine implements ExamServer {
                 // write to file using assessment.getInformation()
                 System.out.println("ExamEngine - Writing assessment to file...");
                 try {
+                    // write assessment information
                     FileWriter fw = new FileWriter("assessment_" + i + ".txt");
                     fw.write(assessment.getInformation());
+                    int j = 0;
                     for (Question q : assessment.getQuestions()) {
+                        // write question information
                         fw.append(q.getQuestionDetail());
+                        fw.append("Answer Options:");
                         for (String s : q.getAnswerOptions()) {
-                            fw.append(s);
+                            // write answer options
+                            fw.append(s + "\n");
                         }
+                        // write answer to question
+                        fw.append("Answer: " + (assessment.getSelectedAnswer(j) + 1) + "\n");
+                        j++;
                     }
                     fw.close();
                 } catch (Exception e) {
