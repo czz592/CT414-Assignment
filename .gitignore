@@ -4,6 +4,12 @@
 # Log file
 *.log
 
+# programme output .txt
+assessment*.txt
+
+# rmisample-win
+rmisample-win\
+
 # BlueJ files
 *.ctxt
 
