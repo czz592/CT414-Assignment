@@ -34,6 +34,7 @@ public class ExamEngine implements ExamServer {
         // if studentid and password match
         // return token
         // else return UnauthorizedAccess
+        
         int token;
         if (map.containsKey(studentid) && map.containsValue(password)) {
             token = 1; // 1 for testing purposes
@@ -46,19 +47,23 @@ public class ExamEngine implements ExamServer {
     // Return a summary list of Assessments currently available for this studentid
     public List<String> getAvailableSummary(int token, int studentid)
             throws UnauthorizedAccess, NoMatchingAssessment, RemoteException {
+
+        List<String> assessmentSummary = new ArrayList<String>();
+
         // check token is valid
         // if not valid throw UnauthorizedAccess
         if (token != 1) {
             throw new UnauthorizedAccess("Invalid token");
-        }
-
-        // for each assessment
-        // add assessment.getInformation()
-        // to a list of strings
-        List<String> assessmentSummary = new ArrayList<String>();
-        for (Assessment assessment : assessments) {
-            assessmentSummary.add("Summary of available assessments:\n");
-            assessmentSummary.add(assessment.getInformation());
+        } else if (map.containsKey(studentid)) {
+            throw new UnauthorizedAccess("Invalid studentid");
+        } else {
+            // for each assessment
+            // add assessment.getInformation()
+            // to a list of strings
+            for (Assessment assessment : assessments) {
+                assessmentSummary.add("Summary of available assessments:\n");
+                assessmentSummary.add(assessment.getInformation());
+            }
         }
 
         // return the list

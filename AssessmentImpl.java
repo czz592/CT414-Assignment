@@ -60,7 +60,7 @@ public class AssessmentImpl implements Assessment {
     @Override
     public void selectAnswer(int questionNumber, int optionNumber) throws InvalidQuestionNumber, InvalidOptionNumber {
         // check questionNumber is valid
-        // if not valid throw InvalidQuestionNumber
+        // if not valid throw InvalidAQuestionNumber
         if (questionNumber < 0 || questionNumber > questions.size()) {
             throw new InvalidQuestionNumber();
         }
