@@ -83,7 +83,6 @@ public class ClientCLI {
     }
 
     private void submit() {
-        // download .txt file of completed assessment?
         try {
             System.out.println("Submitting assessment: ");
             engine.submitAssessment(token, id, assessment);
