@@ -1,1 +1,0 @@
-java -cp C:\Users\aoife\Documents\CT414\Assignment-1\CT414-Assignment -Djava.security.manager=allow -Djava.rmi.server.codebase=file:C:/Users/aoife/Documents/CT414/Assignment-1/CT414-Assignment/ -Djava.security.policy=server.policy ExamEngine
