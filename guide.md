@@ -1,5 +1,25 @@
+# Summarised
 
-The goal of this assignment is to implement and test some modifications to the attached sample map reduce program, as follows:
+## Steps
+
+1. **File Input Modification**: The program is to be modified to accept a variable list of text files via the command line for processing. Large text files (each at least 100KB) are to be used for testing consistently.
+
+2. **Word Extraction**: Modify the program to extract only individual words from the input files, filtering out punctuation, non-text symbols, and numbers.
+
+3. **Performance Measurement**: Implement a mechanism to measure the time taken in milliseconds for different parts of the program. This establishes a baseline performance for each phase of the program.
+
+4. **Threading Strategy (Map Phase)**: Approach 3 of the program is modified to use a thread pool of variable size for parallel execution of map functions, instead of a thread per file.
+
+5. **Threading Strategy (Reduce Phase)**: Further modification of Approach 3 to utilize a variable-sized thread pool for parallel execution of reduce functions, instead of a thread per word.
+
+6. **Testing and Optimization**: Conduct tests with different thread pool sizes for both map and reduce operations. Compare performance results with different approaches to determine optimal thread pool sizes.
+
+## Notes
+
+- Large text files can be obtained from the internet, and PDF to text converters can be used for testing purposes.
+- Submission details include packaging all source code and related documentation into a single ZIP file for submission via Canvas. Groups of up to two students are allowed for collaboration.
+
+# Original
 
 ## Steps
 
@@ -20,6 +40,11 @@ The goal of this assignment is to implement and test some modifications to the a
 - You can download large text files from the internet. There are also some free online PDF to text file converters available that will convert PDF files into text files, these can be useful if you have some large PDF files and want to convert them to text format for testing purposes.
 - 
 
-Submission Details
+## Submission Details
 
-When completed you should submit copies of the source code you have written for the assignment as well as a document describing how you tested the application, the document should include screen shots showing evidence of the application running, also include test results and explanations of the results. Please combine all the source code files and related documentation (PDF or MS Word format only) into a single ZIP file for submission. All submissions should be done via Canvas and if you submit more than one attempt then only the final attempt will be marked. You can work on this assignment individually or in groups of no more than two students. In the case of a group submission only one member of the group needs to submit the assignment on Canvas, but please ensure that the ID number for both students is included at the top of the documentation.
+submit copies of the:
+
+- source code
+- report document - describing how you tested the application, include screen shots showing evidence of the application running, also include test results and explanations of the results. 
+
+Combine all the source code files and related documentation (PDF) into a single ZIP file for submission.
