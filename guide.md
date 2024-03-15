@@ -2,21 +2,14 @@
 
 ## Steps
 
-1. **File Input Modification**: The program is to be modified to accept a variable list of text files via the command line for processing. Large text files (each at least 100KB) are to be used for testing consistently.
+1. **Threading Strategy (Map Phase)**: Approach 3 of the program is modified to use a thread pool of variable size for parallel execution of map functions, instead of a thread per file.
 
-2. **Word Extraction**: Modify the program to extract only individual words from the input files, filtering out punctuation, non-text symbols, and numbers.
+2. **Threading Strategy (Reduce Phase)**: Further modification of Approach 3 to utilize a variable-sized thread pool for parallel execution of reduce functions, instead of a thread per word.
 
-3. **Performance Measurement**: Implement a mechanism to measure the time taken in milliseconds for different parts of the program. This establishes a baseline performance for each phase of the program.
-
-4. **Threading Strategy (Map Phase)**: Approach 3 of the program is modified to use a thread pool of variable size for parallel execution of map functions, instead of a thread per file.
-
-5. **Threading Strategy (Reduce Phase)**: Further modification of Approach 3 to utilize a variable-sized thread pool for parallel execution of reduce functions, instead of a thread per word.
-
-6. **Testing and Optimization**: Conduct tests with different thread pool sizes for both map and reduce operations. Compare performance results with different approaches to determine optimal thread pool sizes.
+3. **Testing and Optimization**: Conduct tests with different thread pool sizes for both map and reduce operations. Compare performance results with different approaches to determine optimal thread pool sizes.
 
 ## Notes
 
-- Large text files can be obtained from the internet, and PDF to text converters can be used for testing purposes.
 - Submission details include packaging all source code and related documentation into a single ZIP file for submission via Canvas. Groups of up to two students are allowed for collaboration.
 
 # Original
