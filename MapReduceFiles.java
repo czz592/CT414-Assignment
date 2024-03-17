@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MapReduceFiles {
 
@@ -37,7 +39,9 @@ public class MapReduceFiles {
         distributed_mapReduce(input);
         System.out.println("Distributed MapReduce: " + (System.currentTimeMillis() - start) + "ms");
 
-        System.out.println("Done!");
+        start = System.currentTimeMillis();
+        thread_pool_mapReduce(input, 10, 10);
+        System.out.println("Thread Pool MapReduce: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     // APPROACH #1: Brute force
@@ -70,6 +74,9 @@ public class MapReduceFiles {
     // APPROACH #2: MapReduce
     private static void mapReduce(Map<String, String> input) {
         Map<String, Map<String, Integer>> output = new HashMap<String, Map<String, Integer>>();
+
+        // mapping phase
+        long start = System.currentTimeMillis();
         List<MappedItem> mappedItems = new LinkedList<MappedItem>();
         Iterator<Map.Entry<String, String>> inputIter = input.entrySet().iterator();
         while (inputIter.hasNext()) {
@@ -79,6 +86,10 @@ public class MapReduceFiles {
 
             map(file, contents, mappedItems);
         }
+        System.out.println("MapRedue - Mapping phase: " + (System.currentTimeMillis() - start) + "ms");
+
+        // grouping phase
+        start = System.currentTimeMillis();
         Map<String, List<String>> groupedItems = new HashMap<String, List<String>>();
         Iterator<MappedItem> mappedIter = mappedItems.iterator();
         while (mappedIter.hasNext()) {
@@ -92,6 +103,10 @@ public class MapReduceFiles {
             }
             list.add(file);
         }
+        System.out.println("MapRedue - Grouping phase: " + (System.currentTimeMillis() - start) + "ms");
+
+        // reducing phase
+        start = System.currentTimeMillis();
         Iterator<Map.Entry<String, List<String>>> groupedIter = groupedItems.entrySet().iterator();
         while (groupedIter.hasNext()) {
             Map.Entry<String, List<String>> entry = groupedIter.next();
@@ -100,11 +115,15 @@ public class MapReduceFiles {
 
             reduce(word, list, output);
         }
+        System.out.println("MapRedue - Reducing phase: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     // APPROACH #3: Distributed MapReduce
     private static void distributed_mapReduce(Map<String, String> input) {
         final Map<String, Map<String, Integer>> output = new HashMap<String, Map<String, Integer>>();
+
+        // mapping phase
+        long start = System.currentTimeMillis();
         final List<MappedItem> mappedItems = new LinkedList<MappedItem>();
         final MapCallback<String, MappedItem> mapCallback = new MapCallback<String, MappedItem>() {
             @Override
@@ -112,7 +131,9 @@ public class MapReduceFiles {
                 mappedItems.addAll(results);
             }
         };
+
         List<Thread> mapCluster = new ArrayList<Thread>(input.size());
+
         Iterator<Map.Entry<String, String>> inputIter = input.entrySet().iterator();
         while (inputIter.hasNext()) {
             Map.Entry<String, String> entry = inputIter.next();
@@ -128,6 +149,7 @@ public class MapReduceFiles {
             mapCluster.add(t);
             t.start();
         }
+
         // wait for mapping phase to be over:
         for (Thread t : mapCluster) {
             try {
@@ -136,6 +158,10 @@ public class MapReduceFiles {
                 throw new RuntimeException(e);
             }
         }
+        System.out.println("Distributed MapRedue - Mapping phase: " + (System.currentTimeMillis() - start) + "ms");
+
+        // grouping phase
+        start = System.currentTimeMillis();
         Map<String, List<String>> groupedItems = new HashMap<String, List<String>>();
         Iterator<MappedItem> mappedIter = mappedItems.iterator();
         while (mappedIter.hasNext()) {
@@ -149,6 +175,10 @@ public class MapReduceFiles {
             }
             list.add(file);
         }
+        System.out.println("Distributed MapRedue - Grouping phase: " + (System.currentTimeMillis() - start) + "ms");
+
+        // reducing phase
+        start = System.currentTimeMillis();
         final ReduceCallback<String, String, Integer> reduceCallback = new ReduceCallback<String, String, Integer>() {
             @Override
             public synchronized void reduceDone(String k, Map<String, Integer> v) {
@@ -179,6 +209,94 @@ public class MapReduceFiles {
                 throw new RuntimeException(e);
             }
         }
+        System.out.println("Distributed MapRedue - Reducing phase: " + (System.currentTimeMillis() - start) + "ms");
+    }
+
+    // APPROACH #4: Thread Pool MapReduce
+    private static void thread_pool_mapReduce(Map<String, String> input, int mapPoolSize, int reducePoolSize) {
+        final Map<String, Map<String, Integer>> output = new HashMap<String, Map<String, Integer>>();
+
+        // mapping phase
+        long start = System.currentTimeMillis();
+        final List<MappedItem> mappedItems = new LinkedList<MappedItem>();
+        final MapCallback<String, MappedItem> mapCallback = new MapCallback<String, MappedItem>() {
+            @Override
+            public synchronized void mapDone(String file, List<MappedItem> results) {
+                mappedItems.addAll(results);
+            }
+        };
+
+        // modified mapping phase to use thread pool
+        // create thread pool of poolsize
+        ExecutorService executor = Executors.newFixedThreadPool(mapPoolSize);
+        Iterator<Map.Entry<String, String>> inputIter = input.entrySet().iterator();
+
+        while (inputIter.hasNext()) {
+            Map.Entry<String, String> entry = inputIter.next();
+            final String file = entry.getKey();
+            final String contents = entry.getValue();
+
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    map(file, contents, mapCallback);
+                }
+            });
+        }
+
+        // shutdown the executor to finish the mapping phase
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+        System.out.println("Thread Pool MapRedue - Mapping phase: " + (System.currentTimeMillis() - start) + "ms");
+
+        // grouping phase
+        start = System.currentTimeMillis();
+        Map<String, List<String>> groupedItems = new HashMap<String, List<String>>();
+        Iterator<MappedItem> mappedIter = mappedItems.iterator();
+        while (mappedIter.hasNext()) {
+            MappedItem item = mappedIter.next();
+            String word = item.getWord();
+            String file = item.getFile();
+            List<String> list = groupedItems.get(word);
+            if (list == null) {
+                list = new LinkedList<String>();
+                groupedItems.put(word, list);
+            }
+            list.add(file);
+        }
+        System.out.println("Thread Pool MapRedue - Grouping phase: " + (System.currentTimeMillis() - start) + "ms");
+
+        // reducing phase
+        start = System.currentTimeMillis();
+        final ReduceCallback<String, String, Integer> reduceCallback = new ReduceCallback<String, String, Integer>() {
+            @Override
+            public synchronized void reduceDone(String k, Map<String, Integer> v) {
+                output.put(k, v);
+            }
+        };
+
+        // modified reducing phase to use thread pool
+        executor = Executors.newFixedThreadPool(reducePoolSize);
+        Iterator<Map.Entry<String, List<String>>> groupedIter = groupedItems.entrySet().iterator();
+        while (groupedIter.hasNext()) {
+            Map.Entry<String, List<String>> entry = groupedIter.next();
+            final String word = entry.getKey();
+            final List<String> list = entry.getValue();
+
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    reduce(word, list, reduceCallback);
+                }
+            });
+        }
+
+        // shutdown the executor to finish the reducing phase
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+        }
+        System.out.println("Thread Pool MapRedue - Reducing phase: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     public static void map(String file, String contents, List<MappedItem> mappedItems) {
