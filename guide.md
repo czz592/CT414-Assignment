@@ -2,15 +2,7 @@
 
 ## Steps
 
-1. **Threading Strategy (Map Phase)**: Approach 3 of the program is modified to use a thread pool of variable size for parallel execution of map functions, instead of a thread per file.
-
-2. **Threading Strategy (Reduce Phase)**: Further modification of Approach 3 to utilize a variable-sized thread pool for parallel execution of reduce functions, instead of a thread per word.
-
-3. **Testing and Optimization**: Conduct tests with different thread pool sizes for both map and reduce operations. Compare performance results with different approaches to determine optimal thread pool sizes.
-
-## Notes
-
-- Submission details include packaging all source code and related documentation into a single ZIP file for submission via Canvas. Groups of up to two students are allowed for collaboration.
+1. Run a number of tests that use different values for the size of the thread pools used for both the map and reduce operations, the size of map thread pool and the reduce thread pool should be individually configurable and you should try different values for each as part of your testing. Compare the results from using thread pools with the Approach 1, Approach 2 and the original Approach 3 results. What values work well and give the best performance for the set of large files that you used for testing purposes?
 
 # Original
 
