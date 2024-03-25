@@ -16,8 +16,13 @@ public class MapReduceFiles {
 
     public static void main(String[] args) {
         Map<String, String> input = new HashMap<String, String>();
+        int mapPoolSize = Integer.parseInt(args[0]);
+        int reducePoolSize = Integer.parseInt(args[1]);
+        // remove the first two arguments from the list
+        String[] new_args = new String[args.length - 2];
+        System.arraycopy(args, 2, new_args, 0, new_args.length);
         try {
-            for (String file : args) {
+            for (String file : new_args) {
                 input.put(file, readFile(file));
             }
         } catch (IOException ex) {
@@ -40,8 +45,10 @@ public class MapReduceFiles {
         System.out.println("Distributed MapReduce: " + (System.currentTimeMillis() - start) + "ms");
 
         start = System.currentTimeMillis();
-        thread_pool_mapReduce(input, 10, 10);
+        thread_pool_mapReduce(input, mapPoolSize, reducePoolSize);
         System.out.println("Thread Pool MapReduce: " + (System.currentTimeMillis() - start) + "ms");
+        System.out.println(
+                "Thread Pool MapReduce - Map Pool Size: " + mapPoolSize + " - Reduce Pool Size: " + reducePoolSize);
     }
 
     // APPROACH #1: Brute force
